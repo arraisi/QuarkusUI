@@ -9,20 +9,29 @@ Vue.use(Vuex)
 // }
 
 export default new Vuex.Store({
-  state: {
+	state: {
 		// principal: (localStorage.getItem("principal") && JSON.parse(localStorage.getItem("principal"))) || {},
 		notification: {
 			title: null,
 			content: {},
 			show: false
-		}
+		},
+		title: ''
 	},
 	mutations: {
-		// login(state, principal) {
-		// 	state.principal = principal;
-		// 	axios.defaults.headers.common["Authorization"] = "Bearer " + principal.token;
-		// 	localStorage.setItem("principal", JSON.stringify(principal));
-		// },
+		showNotification(state, { title, content }) {
+			state.notification.title = title;
+			state.notification.content = content;
+			state.notification.show = true;
+		},
+		hideNotification(state) {
+			state.notification.show = false;
+			state.notification.title = null;
+			state.notification.content = {};
+		},
+		debug(state) {
+			console.log("localStorage principal: " + localStorage.getItem("principal") + " state: " + JSON.stringify(state, null, 4));
+		}
 	},
 	actions: {
 		// login({ commit }, body) {
