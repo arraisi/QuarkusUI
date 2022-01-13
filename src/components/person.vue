@@ -15,12 +15,6 @@
 				:sort-by.sync="sortBy"
 				:sort-desc.sync="sortDesc"
 			>
-				<template v-slot:item.logo="{ item }">
-					<img :src="item.airline.logo" style="width: 10%" />
-				</template>
-				<template v-slot:item.website="{ item }">
-					<a :href="item.airline.website">{{ item.airline.website }}</a>
-				</template>
 			</v-data-table>
 		</v-col>
 	</v-container>
@@ -30,7 +24,6 @@
 import axios from "axios";
 
 export default {
-	name: "HelloWorld",
 	data: () => ({
 		loading: true,
 		data: [],
@@ -61,22 +54,18 @@ export default {
 			axios.get("/person/list").then((response) => {
 				//Then injecting the result to datatable parameters.
 				this.loading = false;
-				// console.log("response: ", response);
-				// console.log("response data: ", response.data);
 				this.data = response.data.data;
 			});
 		},
 		personDatatables() {
 			this.loading = true;
-			const { page, itemsPerPage } = this.options;
+			const { sortBy, sortDesc, page, itemsPerPage } = this.options;
 			let pageIndex = page - 1;
-			axios.get(`/person/datatables?pageIndex=${pageIndex}&pageSize=${itemsPerPage}`).then((response) => {
+			axios.get(`/person/datatables?sortBy=${sortBy[0]}&sortDesc=${sortDesc[0]}&pageIndex=${pageIndex}&pageSize=${itemsPerPage}`).then((response) => {
 				//Then injecting the result to datatable parameters.
 				this.loading = false;
-				console.log("response: ", response);
 				this.data = response.data.item1;
 				this.serverItemsLength = response.data.item2;
-				// console.log("data: ", this.data);
 			});
 		}
 	},
