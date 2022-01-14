@@ -1,47 +1,57 @@
 <template>
 	<v-app>
-		<v-app-bar style="padding-left: 55px" absolute color="white" elevate-on-scroll scroll-target="#scrolling-techniques-7">
-			<v-toolbar-title>{{$store.state.title}}</v-toolbar-title>
-
+		<v-app-bar style="padding-left: 55px" absolute :color="$store.state.dark ? '#FF6D00' : 'white'" elevate-on-scroll scroll-target="#scrolling-techniques-7">
+			<v-toolbar-title :style="{ paddingLeft: '8px', color: $store.state.dark ? 'white' : 'primary' }"><b>Quarkus UI</b></v-toolbar-title>
 			<v-spacer></v-spacer>
-
-			<v-btn small icon class="ml-2" @click="logout">
-				<v-icon color="black">mdi-exit-to-app</v-icon>
+			<!-- <v-toolbar-title class="subtitle" style="color: #03045E; padding-right: 56px; font-size: 1rem"><b>{{ title }}</b></v-toolbar-title>
+			<v-spacer></v-spacer> -->
+			<v-switch dense hide-details="true" v-model="$store.state.dark" inset>
+				<template v-slot:label>
+					<span class="dark-label">Dark theme</span>
+				</template>
+			</v-switch>
+			<v-divider class="mx-4" inset vertical></v-divider>
+			<v-btn small class="mr-1" icon @click="logout">
+				<v-icon color="primary">mdi-exit-to-app</v-icon>
 			</v-btn>
 		</v-app-bar>
 		<v-navigation-drawer absolute permanent expand-on-hover>
-			<!-- <v-list>
+			<v-list>
 				<v-list-item class="px-2">
 					<v-list-item-avatar>
-						<v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
+						<v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
 					</v-list-item-avatar>
 				</v-list-item>
 
 				<v-list-item link>
 					<v-list-item-content>
 						<v-list-item-title class="text-h6"> Sandra Adams </v-list-item-title>
-						<v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
+						<v-list-item-subtitle>adams@gmail.com</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
 
-			<v-divider></v-divider> -->
+			<v-divider></v-divider>
 
 			<v-list nav dense>
 				<v-list-item to="/person" link>
 					<v-list-item-icon>
 						<v-icon>mdi-account-multiple</v-icon>
 					</v-list-item-icon>
-					<v-list-item-title>People</v-list-item-title>
+					<v-list-item-title>Person</v-list-item-title>
+				</v-list-item>
+				<v-list-item to="/product" link>
+					<v-list-item-icon>
+						<v-icon>mdi-storefront</v-icon>
+					</v-list-item-icon>
+					<v-list-item-title>Product</v-list-item-title>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
 
 		<v-sheet id="scrolling-techniques-7" class="overflow-y-auto" max-height="100vh">
-			<!-- <v-container style="height: 1500px;">
-      </v-container> -->
-			<v-main  :style="{ backgroundColor: '#f8f8f8', paddingLeft: '56px', paddingTop: '63px', paddingBottom: '0px', minHeight: '100vh', display: 'flex', flexDirection: 'row' }">
-				<v-container fluid style="height: 200vh">
+			<v-main :style="{ backgroundColor: $store.state.dark ? '#03045E' : '#F8F8F8', paddingLeft: '56px', paddingTop: '63px', paddingBottom: '0px', minHeight: '100vh', display: 'flex', flexDirection: 'row' }">
+				<v-container fluid>
 					<router-view :key="$route.fullPath"></router-view>
 				</v-container>
 			</v-main>
@@ -90,7 +100,18 @@
 	</v-app>
 </template>
 
+<style scoped>
+.v-list .v-list-item--active {
+	color: #000269;
+}
+.dark-label {
+	font-size: 1rem;
+	font-weight: 500;
+}
+</style>
+
 <script>
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 
 export default {
@@ -103,6 +124,7 @@ export default {
 			confirmNewPassword: null,
 			showProfile: false,
 			mini: true
+			// title: ""
 		};
 	},
 	watch: {
@@ -111,6 +133,12 @@ export default {
 				this.showProfile = false;
 			}
 		}
+		// $route: {
+		// 	immediate: true,
+		// 	handler(to, from) {
+		// 		this.title = to.meta.title || "";
+		// 	}
+		// }
 	},
 	methods: {
 		editPassword() {

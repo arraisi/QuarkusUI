@@ -16,7 +16,7 @@ export default new Vuex.Store({
 			content: {},
 			show: false
 		},
-		title: ''
+		dark: false
 	},
 	mutations: {
 		showNotification(state, { title, content }) {

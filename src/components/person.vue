@@ -1,24 +1,27 @@
 <template>
-	<v-col>
-		<v-data-table
-			:footer-props="{
-				'items-per-page-options': [2, 4, 8]
-			}"
-			:items-per-page="2"
-			:headers="headers"
-			:items="data"
-			:options.sync="options"
-			:server-items-length="serverItemsLength"
-			:loading="loading"
-			:sort-by.sync="sortBy"
-			:sort-desc.sync="sortDesc"
-		>
-			<template v-slot:[`item.active`]="{ item }">
-				<v-icon color="success" v-if="item.active == true">mdi-check</v-icon>
-				<v-icon color="primary" v-else>mdi-minus</v-icon>
-			</template>
-		</v-data-table>
-	</v-col>
+	<v-container fluid>
+		<v-col>
+			<v-data-table
+				class="elevation-2"
+				:footer-props="{
+					'items-per-page-options': [2, 4, 8]
+				}"
+				:items-per-page="2"
+				:headers="headers"
+				:items="data"
+				:options.sync="options"
+				:server-items-length="serverItemsLength"
+				:loading="loading"
+				:sort-by.sync="sortBy"
+				:sort-desc.sync="sortDesc"
+			>
+				<template v-slot:[`item.active`]="{ item }">
+					<v-icon color="success" v-if="item.active == true">mdi-check</v-icon>
+					<v-icon color="primary" v-else>mdi-minus</v-icon>
+				</template>
+			</v-data-table>
+		</v-col>
+	</v-container>
 </template>
 
 <script>
