@@ -1,13 +1,13 @@
 <template>
 	<v-app>
-		<v-app-bar style="padding-left: 55px" absolute :color="$store.state.dark ? '#FF6D00' : 'white'" elevate-on-scroll scroll-target="#scrolling-techniques-7">
-			<v-toolbar-title :style="{ paddingLeft: '8px', color: $store.state.dark ? 'white' : 'primary' }"><b>Quarkus UI</b></v-toolbar-title>
+		<v-app-bar style="padding-left: 55px" absolute :color="$store.state.principal.map.dark_mode ? '#FF6D00' : 'white'" elevate-on-scroll scroll-target="#scrolling-techniques-7">
+			<v-toolbar-title :style="{ paddingLeft: '8px', color: $store.state.principal.map.dark_mode ? 'white' : 'primary' }"><b>Quarkus UI</b></v-toolbar-title>
 			<v-spacer></v-spacer>
 			<!-- <v-toolbar-title class="subtitle" style="color: #03045E; padding-right: 56px; font-size: 1rem"><b>{{ title }}</b></v-toolbar-title>
 			<v-spacer></v-spacer> -->
-			<v-switch dense hide-details="true" v-model="$store.state.dark" inset>
+			<v-switch dense hide-details="true" v-model="$store.state.principal.map.dark_mode" @change="onChangeTheme()" inset>
 				<template v-slot:label>
-					<span class="dark-label">Dark theme</span>
+					<span class="dark-label">Dark mode</span>
 				</template>
 			</v-switch>
 			<v-divider class="mx-4" inset vertical></v-divider>
@@ -19,14 +19,15 @@
 			<v-list>
 				<v-list-item class="px-2">
 					<v-list-item-avatar>
-						<v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+						<v-img v-if="$store.state.principal.gender == 'Male'" src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+						<v-img v-else src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
 					</v-list-item-avatar>
 				</v-list-item>
 
 				<v-list-item link>
 					<v-list-item-content>
-						<v-list-item-title class="text-h6"> Sandra Adams </v-list-item-title>
-						<v-list-item-subtitle>adams@gmail.com</v-list-item-subtitle>
+						<v-list-item-title class="text-h6"> {{ $store.state.principal.name }} </v-list-item-title>
+						<v-list-item-subtitle>{{ $store.state.principal.email }}</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
@@ -50,7 +51,7 @@
 		</v-navigation-drawer>
 
 		<v-sheet id="scrolling-techniques-7" class="overflow-y-auto" max-height="100vh">
-			<v-main :style="{ backgroundColor: $store.state.dark ? '#03045E' : '#F8F8F8', paddingLeft: '56px', paddingTop: '63px', paddingBottom: '0px', minHeight: '100vh', display: 'flex', flexDirection: 'row' }">
+			<v-main :style="{ backgroundColor: $store.state.principal.map.dark_mode ? '#03045E' : '#F8F8F8', paddingLeft: '56px', paddingTop: '63px', paddingBottom: '0px', minHeight: '100vh', display: 'flex', flexDirection: 'row' }">
 				<v-container fluid>
 					<router-view :key="$route.fullPath"></router-view>
 				</v-container>
@@ -141,6 +142,17 @@ export default {
 		// }
 	},
 	methods: {
+		onChangeTheme() {
+			let principal = this.$store.state.principal;
+			let person = {
+				id: principal.id,
+				map: principal.map
+			};
+			this.loading = true;
+			axios.put(`/person/map`, person).then((response) => {
+				this.loading = false;
+			});
+		},
 		editPassword() {
 			axios
 				.post("/system/password/edit", {

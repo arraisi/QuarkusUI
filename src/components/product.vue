@@ -122,15 +122,12 @@ export default {
 				//Then injecting the result to datatable parameters.
 				this.loading = false;
 				this.data = response.data;
-				console.log(response);
 			});
 		},
 		add() {
 			this.product = {};
 			this.product.quantity = 0;
 			this.product.price = 0;
-			this.product.price = 0;
-			console.log("product: ", this.product);
 		},
 		edit(item) {
 			this.product = item;
