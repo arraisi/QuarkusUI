@@ -168,6 +168,7 @@ export default {
 			this.loading = true;
 			axios.put(`/person/map`, person).then((response) => {
 				this.loading = false;
+				localStorage.setItem("principal", JSON.stringify(this.$store.state.principal));
 			});
 		},
 		editPassword() {

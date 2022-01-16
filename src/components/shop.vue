@@ -7,7 +7,7 @@
 			</v-card-title>
 			<v-divider class="mx-8 my-4"></v-divider>
 			<!-- Data table -->
-			<v-data-table class="mx-8 px-8 elevation-1" :headers="headers" :items="data" sort-by="calories">
+			<v-data-table class="mx-8 px-8 elevation-1" :search="search" :headers="headers" :items="data" sort-by="id">
 				<template v-slot:top>
 					<!-- Toolbar -->
 					<v-toolbar flat rounded="lg" class="pt-2 mb-2 dt-toolbar">
@@ -17,7 +17,7 @@
 						<!-- Dialog edit -->
 						<v-dialog v-model="dialog" max-width="500px">
 							<template v-slot:activator="{ on, attrs }">
-								<v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"> New Product </v-btn>
+								<v-btn color="info" dark class="mb-2" v-bind="attrs" v-on="on"> <v-icon>mdi-plus</v-icon> Add Product</v-btn>
 							</template>
 							<v-card>
 								<v-card-title>
@@ -27,14 +27,11 @@
 								<v-card-text>
 									<v-container>
 										<v-row>
-											<v-col cols="12">
-												<v-text-field v-model="editedItem.name" label="Name*" required></v-text-field>
+											<v-col cols="6">
+												<v-select v-model="editedItem.product" :items="products" label="Product" item-text="name"></v-select>
 											</v-col>
 											<v-col cols="6">
-												<v-text-field v-model="editedItem.price" label="Price*" append-icon="mdi-currency-usd" type="number" required></v-text-field>
-											</v-col>
-											<v-col cols="6">
-												<v-text-field v-model="editedItem.quantity" label="Stock*" type="number" required></v-text-field>
+												<v-text-field v-model="editedItem.quantity" label="Quantity" type="number"></v-text-field>
 											</v-col>
 										</v-row>
 									</v-container>
@@ -48,6 +45,38 @@
 							</v-card>
 						</v-dialog>
 						<!-- Dialog edit end -->
+
+						<!-- Dialog checkout -->
+						<v-dialog v-model="dialog" max-width="500px">
+							<template v-slot:activator="{ on, attrs }">
+								<v-btn color="primary" dark class="mb-2 ml-2" v-bind="attrs" v-on="on"> Checkout </v-btn>
+							</template>
+							<v-card>
+								<v-card-title>
+									<span class="text-h5">{{ formTitle }}</span>
+								</v-card-title>
+
+								<v-card-text>
+									<v-container>
+										<v-row>
+											<v-col cols="6">
+												<v-select v-model="editedItem.product" :items="products" label="Product" item-text="name"></v-select>
+											</v-col>
+											<v-col cols="6">
+												<v-text-field v-model="editedItem.quantity" label="Quantity" type="number"></v-text-field>
+											</v-col>
+										</v-row>
+									</v-container>
+								</v-card-text>
+
+								<v-card-actions>
+									<v-spacer></v-spacer>
+									<v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
+									<v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+								</v-card-actions>
+							</v-card>
+						</v-dialog>
+						<!-- Dialog checkout end -->
 
 						<!-- Dialog delete -->
 						<v-dialog v-model="dialogDelete" max-width="550px">
@@ -65,6 +94,10 @@
 					</v-toolbar>
 					<!-- Toolbar end -->
 				</template>
+				<template v-slot:[`item.total`]="{ item }">
+					{{ item.product.price * item.quantity }}
+				</template>
+				<!-- <template v-slot:[`item.full_name`]="{ item }">{{ item.first_name }} {{ item.last_name }}</template> -->
 				<template v-slot:[`item.actions`]="{ item }">
 					<v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
 					<v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -91,6 +124,8 @@ export default {
 		loading: true,
 		search: "",
 		options: {},
+		products: [],
+		data: [],
 		dialog: false,
 		dialogDelete: false,
 		headers: [
@@ -98,10 +133,9 @@ export default {
 			{ text: "Name", value: "product.name" },
 			{ text: "Price", value: "product.price" },
 			{ text: "Quantity", value: "quantity" },
-			{ text: "Total", value: "quantity" * "product.price" },
+			{ text: "Total", value: "total" },
 			{ text: "Actions", value: "actions", sortable: false }
 		],
-		data: [],
 		editedIndex: -1,
 		editedItem: {
 			id: null,
@@ -146,6 +180,14 @@ export default {
 				this.loading = false;
 				this.data = response.data;
 			});
+			this.listProduct();
+		},
+
+		listProduct() {
+			axios.get(`/product/list`).then((response) => {
+				//Then injecting the result to datatable parameters.
+				this.products = response.data;
+			});
 		},
 
 		editItem(item) {
@@ -189,11 +231,14 @@ export default {
 		save() {
 			this.loading = true;
 			if (this.editedIndex > -1) {
-				axios.put(`/shop`, this.editedItem).then((response) => {
+				// update
+				axios.put(`/shop/qty`, this.editedItem).then((response) => {
+					console.log(response);
 					this.close();
 				});
 			} else {
 				axios.post(`/shop`, this.editedItem).then((response) => {
+					console.log(response);
 					this.close();
 				});
 			}

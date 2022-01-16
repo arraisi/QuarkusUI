@@ -7,7 +7,7 @@
 			</v-card-title>
 			<v-divider class="mx-8 my-4"></v-divider>
 			<!-- Data table -->
-			<v-data-table class="mx-8 px-8 elevation-1" :headers="headers" :items="data" sort-by="calories">
+			<v-data-table class="mx-8 px-8 elevation-1" :search="search" :headers="headers" :items="data" sort-by="id">
 				<template v-slot:top>
 					<!-- Toolbar -->
 					<v-toolbar flat rounded="lg" class="pt-2 mb-2 dt-toolbar">

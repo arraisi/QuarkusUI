@@ -71,16 +71,12 @@ export default {
 						this.$router.push({
 							path: "person"
 						});
-					})
-					.catch((error) => {
-						// console.log("error: ", error);
 					});
 			}
 		}
 	},
 	created() {
-		this.$store
-			.dispatch("logout");
+		this.$store.dispatch("logout");
 	}
 };
 </script>
