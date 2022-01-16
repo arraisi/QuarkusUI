@@ -1,6 +1,6 @@
 <template>
 	<v-col>
-		<v-card class="py-6" rounded="lg">
+		<v-card class="py-6" rounded="lg" color="rgba(255, 255, 255, 0.75) !important" style="backdrop-filter: blur(10px)">
 			<v-row no-gutters class="px-8 d-flex flex-row" align="center">
 				<h3>Person</h3>
 				<v-spacer></v-spacer>

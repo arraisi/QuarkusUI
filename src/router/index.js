@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import menu from "../components/menu";
 import person from "../components/person";
 import product from "../components/product";
+import shop from "../components/shop";
 import login from "../components/login";
 import navigation from "../components/navigation";
 
@@ -27,7 +28,8 @@ const routes = [
     props: true,
     children: [
       { path: "/person", component: person, props: true, meta: { restricted: true, title: 'Person' } },
-      { path: "/product", component: product, props: true, meta: { restricted: true, title: 'Product' } }
+      { path: "/product", component: product, props: true, meta: { restricted: true, title: 'Product' } },
+      { path: "/shop", component: shop, props: true, meta: { restricted: true, title: 'Shop' } },
     ]
   }
 ]

@@ -1,7 +1,7 @@
 <template>
 	<v-app>
 		<v-app-bar style="padding-left: 55px" absolute :color="$store.state.principal.map.dark_mode ? '#FF6D00' : 'white'" elevate-on-scroll scroll-target="#scrolling-techniques-7">
-			<v-toolbar-title :style="{ paddingLeft: '8px', color: $store.state.principal.map.dark_mode ? 'white' : 'primary' }"><b>Quarkus UI</b></v-toolbar-title>
+			<v-toolbar-title :style="{ paddingLeft: '8px', color: $store.state.principal.map.dark_mode ? 'white' : '' }"><b>Quarkus UI</b></v-toolbar-title>
 			<v-spacer></v-spacer>
 			<!-- <v-toolbar-title class="subtitle" style="color: #03045E; padding-right: 56px; font-size: 1rem"><b>{{ title }}</b></v-toolbar-title>
 			<v-spacer></v-spacer> -->
@@ -15,7 +15,7 @@
 				<v-icon color="primary">mdi-exit-to-app</v-icon>
 			</v-btn>
 		</v-app-bar>
-		<v-navigation-drawer absolute permanent expand-on-hover>
+		<v-navigation-drawer absolute permanent expand-on-hover color="rgba(255, 255, 255, 0.75) !important" style="backdrop-filter: blur(10px)">
 			<v-list>
 				<v-list-item class="px-2">
 					<v-list-item-avatar>
@@ -47,11 +47,28 @@
 					</v-list-item-icon>
 					<v-list-item-title>Product</v-list-item-title>
 				</v-list-item>
+				<v-list-item to="/shop" link>
+					<v-list-item-icon>
+						<v-icon>mdi-basket</v-icon>
+					</v-list-item-icon>
+					<v-list-item-title>Shop</v-list-item-title>
+				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
 
 		<v-sheet id="scrolling-techniques-7" class="overflow-y-auto" max-height="100vh">
-			<v-main :style="{ backgroundColor: $store.state.principal.map.dark_mode ? '#03045E' : '#F8F8F8', paddingLeft: '56px', paddingTop: '63px', paddingBottom: '0px', minHeight: '100vh', display: 'flex', flexDirection: 'row' }">
+			<v-main
+				:style="{
+					backgroundImage: $store.state.principal.map.dark_mode ? `url('layered-waves-haikei-dark.png')` : `url('layered-waves-haikei-light.png')`,
+					backgroundSize: 'cover',
+					paddingLeft: '56px',
+					paddingTop: '63px',
+					paddingBottom: '0px',
+					minHeight: '100vh',
+					display: 'flex',
+					flexDirection: 'row'
+				}"
+			>
 				<v-container fluid>
 					<router-view :key="$route.fullPath"></router-view>
 				</v-container>
@@ -167,13 +184,12 @@ export default {
 				.catch(() => {});
 		},
 		logout() {
-			this.$router.push("/");
-			// this.$store
-			// 	.dispatch("logout")
-			// 	.then(() => {
-			// 		this.$router.push("/");
-			// 	})
-			// 	.catch(() => {});
+			this.$store
+				.dispatch("logout")
+				.then(() => {
+					this.$router.push("/");
+				})
+				.catch(() => {});
 		},
 		hideNotification() {
 			if (this.$store.state.notification.title === "Unauthorized") {

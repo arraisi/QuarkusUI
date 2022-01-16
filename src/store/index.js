@@ -16,8 +16,7 @@ export default new Vuex.Store({
 			title: null,
 			content: {},
 			show: false
-		},
-		dark: false
+		}
 	},
 	mutations: {
 		login(state, principal) {
@@ -57,6 +56,11 @@ export default new Vuex.Store({
 					})
 					.catch(error => reject(error.message));
 			});
+		},
+		logout() {
+			this.state.principal = { map: { dark_mode: false } };
+			delete axios.defaults.headers.common["Authorization"];
+			localStorage.removeItem("principal");
 		},
 	},
 	modules: {

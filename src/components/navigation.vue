@@ -1,7 +1,8 @@
 <template>
 	<v-app>
-		<router-view :key="$route.fullPath"></router-view>
-
+		<v-main style="background-image: url('low-poly-grid-haikei.png'); background-size: cover">
+			<router-view :key="$route.fullPath"></router-view>
+		</v-main>
 		<v-dialog v-model="$store.state.notification.show" max-width="500">
 			<v-card style="padding: 20px">
 				<div style="display: flex; justify-content: space-between">

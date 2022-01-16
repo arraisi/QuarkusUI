@@ -2,7 +2,7 @@
 	<v-col>
 		<v-card class="py-6" rounded="lg" color="rgba(255, 255, 255, 0.75) !important" style="backdrop-filter: blur(10px)">
 			<v-card-title class="px-8 py-0">
-				Product
+				Shop
 				<v-spacer></v-spacer>
 			</v-card-title>
 			<v-divider class="mx-8 my-4"></v-divider>
@@ -52,7 +52,7 @@
 						<!-- Dialog delete -->
 						<v-dialog v-model="dialogDelete" max-width="550px">
 							<v-card>
-								<v-card-title class="text-h5">Are you sure you want to delete this product?</v-card-title>
+								<v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
 								<v-card-actions>
 									<v-spacer></v-spacer>
 									<v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -95,22 +95,27 @@ export default {
 		dialogDelete: false,
 		headers: [
 			{ text: "ID", value: "id" },
-			{ text: "Name", value: "name" },
-			{ text: "Price", value: "price" },
-			{ text: "Stock", value: "quantity" },
+			{ text: "Name", value: "product.name" },
+			{ text: "Price", value: "product.price" },
+			{ text: "Quantity", value: "quantity" },
+			{ text: "Total", value: "quantity" * "product.price" },
 			{ text: "Actions", value: "actions", sortable: false }
 		],
 		data: [],
 		editedIndex: -1,
 		editedItem: {
 			id: null,
+			map: null,
+			product: {},
 			quantity: 0,
-			price: 0
+			invoiceNumber: null
 		},
 		defaultItem: {
 			id: null,
+			map: null,
+			product: {},
 			quantity: 0,
-			price: 0
+			invoiceNumber: null
 		}
 	}),
 
@@ -136,7 +141,7 @@ export default {
 	methods: {
 		initialize() {
 			this.loading = true;
-			axios.get(`/product/list`).then((response) => {
+			axios.get(`/shop/list`).then((response) => {
 				//Then injecting the result to datatable parameters.
 				this.loading = false;
 				this.data = response.data;
@@ -156,7 +161,7 @@ export default {
 		},
 
 		deleteItemConfirm() {
-			axios.delete(`/product/${this.editedItem.id}`).then((response) => {
+			axios.delete(`/shop/${this.editedItem.id}`).then((response) => {
 				this.closeDelete();
 			});
 		},
@@ -184,11 +189,11 @@ export default {
 		save() {
 			this.loading = true;
 			if (this.editedIndex > -1) {
-				axios.put(`/product`, this.editedItem).then((response) => {
+				axios.put(`/shop`, this.editedItem).then((response) => {
 					this.close();
 				});
 			} else {
-				axios.post(`/product`, this.editedItem).then((response) => {
+				axios.post(`/shop`, this.editedItem).then((response) => {
 					this.close();
 				});
 			}

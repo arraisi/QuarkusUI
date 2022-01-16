@@ -47,6 +47,7 @@ new Vue({
     };
   },
   created: function () {
+    // Request
     axios.interceptors.request.use(
       request => {
         this.load();
@@ -78,6 +79,7 @@ new Vue({
       }
     );
 
+    // Response
     axios.interceptors.response.use(
       response => {
         this.unload();
@@ -95,20 +97,29 @@ new Vue({
         if (error.response) {
           if (error.response.status === 400) {
             notification.title = "Bad request";
-          } else if (error.response.status === 500) {
-            notification.title = "Server error";
           } else if (error.response.status === 401) {
             notification.title = "Unauthorized";
           } else if (error.response.status === 403) {
             notification.title = "Forbidden";
           } else if (error.response.status === 404) {
             notification.title = "Not found";
+          } else if (error.response.status === 500) {
+            notification.title = "Server error";
+            if (error.response.data.details.includes('a foreign key constraint fails')) {
+              let details = error.response.data.details.split(':');
+              notification.content = details[3];
+            } else {
+              notification.content = error.response.data.details;
+            }
           } else {
             notification.title = "Notification (" + error.response.status + ")";
           }
-          notification.content = error.response.data;
+
+          if (error.response.status !== 500)
+            notification.content = error.response.data;
+
+          store.commit("showNotification", notification);
         }
-        store.commit("showNotification", notification);
 
         return Promise.reject(error);
       }
