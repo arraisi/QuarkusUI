@@ -60,7 +60,7 @@
 									<v-container>
 										<v-row>
 											<v-col cols="6">
-												<v-select v-model="editedItem.product" :items="products" label="Product" item-text="name"></v-select>
+												<v-select v-model="editedItem.product" :items="products" label="Product" return-object item-text="name"></v-select>
 											</v-col>
 											<v-col cols="6">
 												<v-text-field v-model="editedItem.quantity" label="Quantity" type="number"></v-text-field>
@@ -140,14 +140,16 @@ export default {
 		editedItem: {
 			id: null,
 			map: null,
-			product: {},
+			product: { id: null },
+			person: { id: null },
 			quantity: 0,
 			invoiceNumber: null
 		},
 		defaultItem: {
 			id: null,
 			map: null,
-			product: {},
+			product: { id: null },
+			person: { id: null },
 			quantity: 0,
 			invoiceNumber: null
 		}
@@ -229,16 +231,15 @@ export default {
 		},
 
 		save() {
+			this.editedItem.person.id = this.$store.state.principal.id;
 			this.loading = true;
 			if (this.editedIndex > -1) {
 				// update
 				axios.put(`/shop/qty`, this.editedItem).then((response) => {
-					console.log(response);
 					this.close();
 				});
 			} else {
 				axios.post(`/shop`, this.editedItem).then((response) => {
-					console.log(response);
 					this.close();
 				});
 			}
