@@ -47,7 +47,9 @@
 						<!-- Dialog edit end -->
 
 						<!-- Dialog checkout -->
-						<v-dialog v-model="dialog" max-width="500px">
+						<v-btn color="primary" dark class="mb-2 ml-2" @click="checkout"> Checkout </v-btn>
+
+						<!-- <v-dialog v-model="dialog" max-width="500px">
 							<template v-slot:activator="{ on, attrs }">
 								<v-btn color="primary" dark class="mb-2 ml-2" v-bind="attrs" v-on="on"> Checkout </v-btn>
 							</template>
@@ -75,7 +77,7 @@
 									<v-btn color="blue darken-1" text @click="save"> Save </v-btn>
 								</v-card-actions>
 							</v-card>
-						</v-dialog>
+						</v-dialog> -->
 						<!-- Dialog checkout end -->
 
 						<!-- Dialog delete -->
@@ -96,6 +98,10 @@
 				</template>
 				<template v-slot:[`item.total`]="{ item }">
 					{{ item.product.price * item.quantity }}
+				</template>
+				<template v-slot:[`item.active`]="{ item }">
+					<span v-if="item.active == true">Unpaid</span>
+					<span v-else>Paid</span>
 				</template>
 				<!-- <template v-slot:[`item.full_name`]="{ item }">{{ item.first_name }} {{ item.last_name }}</template> -->
 				<template v-slot:[`item.actions`]="{ item }">
@@ -134,6 +140,7 @@ export default {
 			{ text: "Price", value: "product.price" },
 			{ text: "Quantity", value: "quantity" },
 			{ text: "Total", value: "total" },
+			{ text: "Status", value: "active" },
 			{ text: "Actions", value: "actions", sortable: false }
 		],
 		editedIndex: -1,
@@ -142,16 +149,14 @@ export default {
 			map: null,
 			product: { id: null },
 			person: { id: null },
-			quantity: 0,
-			invoiceNumber: null
+			quantity: 0
 		},
 		defaultItem: {
 			id: null,
 			map: null,
 			product: { id: null },
 			person: { id: null },
-			quantity: 0,
-			invoiceNumber: null
+			quantity: 0
 		}
 	}),
 
@@ -243,6 +248,16 @@ export default {
 					this.close();
 				});
 			}
+		},
+
+		checkout() {
+			axios
+				.put(`/shop/checkout/dummy`, {
+					id: this.$store.state.principal.id
+				})
+				.then((response) => {
+					this.close();
+				});
 		}
 	}
 };
